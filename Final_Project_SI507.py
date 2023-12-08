@@ -32,7 +32,6 @@ def get_yelp_data(api_key, term, location, price=None, offset=0, limit=50):
     if price:
         params['price'] = price
 
-    # Print for debugging
     print(f"Making API call with parameters: {params}")
 
     response = requests.get(url, headers=headers, params=params)
@@ -104,11 +103,9 @@ def main():
     limit = 50 
     cache_filename = 'yelp_data.json'
 
-    # Get user preferences
     user_cuisine, user_price_range, user_location = get_user_preferences()
     mapped_price = map_price_range_to_yelp_format(user_price_range)
 
-    # Check for cached data
     cached_data = load_cached_data(cache_filename)
     if cached_data:
         print("Loading data from cache.")
@@ -126,13 +123,10 @@ def main():
                 break
         cache_data(all_data, cache_filename)
 
-    # Create a tree structure from the data
     restaurant_tree = create_tree(all_data)
 
-    # Filter restaurants based on user preferences
     filtered_data = filter_restaurants(restaurant_tree, user_cuisine, mapped_price, user_location)
 
-    # Display the filtered results
     if filtered_data:
         print(f"Restaurants matching your preferences in {user_location}:")
         for restaurant in filtered_data:
